@@ -2,19 +2,21 @@
 
 A practical threat model and adoption checklist for deploying large language models inside legal practice, where client confidentiality, privilege, and auditability are non-negotiable.
 
-> Maintained by [Rich Berman](https://github.com/granolacowboy) / [MHSB Solutions](https://github.com/MHSBai). Field-tested framing, not vendor marketing. Issues and PRs welcome.
+> Maintained by [Rich Berman](https://github.com/granolacowboy) / [MHSB Solutions](https://github.com/MHSBai). Issues and PRs welcome.
+
+**How to use this:** read it live at [mhsbai.github.io/llm-security-for-law-firms](https://mhsbai.github.io/llm-security-for-law-firms/), or print it and adopt the checklist as an internal standard you run through before signing off on an AI deployment.
 
 ## Who this is for
 
-Managing partners, GCs, legal-ops leads, and the engineers deploying AI for them. It assumes you are adopting AI in a **regulated, change-resistant** environment and need to answer "is this safe, and can we prove it?" before "is it clever?"
+Managing partners, GCs, legal-ops leads, and the engineers deploying AI for them. It assumes you are adopting AI where a wrong answer is an ethics or malpractice exposure, not just a bug, and you need to answer "is this safe, and can we prove it?" before "is it clever?"
 
 ## The threat model (what actually goes wrong)
 
 1. **Confidentiality leakage:** privileged content sent to a training-eligible or consumer endpoint; prompt/response logging outside the firm's control; context bleed between matters.
-2. **Prompt injection & tool abuse:** untrusted document/email content steering an agent into exfiltration, unauthorized actions, or conflict-gate bypass.
+2. **Prompt injection and tool abuse:** untrusted document/email content steering an agent into exfiltration, unauthorized actions, or conflict-gate bypass.
 3. **Non-determinism in the decision path:** a model, not a rule, making a conflict-screening or intake-eligibility call, with no reproducible basis.
-4. **Provenance & auditability gaps:** no record of what was sent, which model/version answered, and why an automated decision was made.
-5. **Data retention & residency:** vendor retention windows, sub-processors, and geography that violate an engagement letter or ethics rule.
+4. **Provenance and auditability gaps:** no record of what was sent, which model/version answered, and why an automated decision was made.
+5. **Data retention and residency:** vendor retention windows, sub-processors, and geography that violate an engagement letter or ethics rule.
 6. **Over-broad access:** an agent with credentials to the whole DMS when it needs one matter.
 
 ## Adoption checklist
@@ -24,19 +26,19 @@ Managing partners, GCs, legal-ops leads, and the engineers deploying AI for them
 - [ ] A documented fail-closed fallback: if the approved model is unavailable, the system stops. It does **not** silently route to a consumer endpoint.
 - [ ] Redaction/minimization before any external call; PII and client identifiers stripped or tokenized where feasible.
 
-### Determinism & human-in-the-loop
+### Determinism and human oversight
 - [ ] Eligibility, conflict, and validation **gates are deterministic code**, not model output. The model assists; the gate decides.
 - [ ] Every automated decision has a **human override** point and is reversible.
 - [ ] Untrusted content (client documents, inbound email) is treated as data, never as instructions to the agent.
 
-### Provenance & audit
+### Provenance and audit
 - [ ] Each automated decision logs: inputs (or their hashes), model + version, prompt, output, and the gate result.
 - [ ] Logs are tamper-evident and retained per the firm's records policy.
 - [ ] You can reproduce or explain any decision to a client or a regulator.
 
-### Access & least privilege
+### Access and least privilege
 - [ ] Agents get matter-scoped, time-boxed credentials: never blanket DMS access.
-- [ ] Write/mutating actions against firm systems are gated (classify → approve → readback-proof).
+- [ ] Write and mutating actions against firm systems are gated: classify the change, require human approval, then verify it by reading the result back.
 - [ ] Secrets live outside prompts and repos; rotated on exposure.
 
 ### Evaluation before adoption
@@ -46,11 +48,15 @@ Managing partners, GCs, legal-ops leads, and the engineers deploying AI for them
 
 ## Mapping to professional responsibility
 
-This checklist is written to support (not replace) counsel's own analysis under the applicable rules: competence and technology (ABA Model Rule 1.1 cmt. 8), confidentiality (1.6), supervision of non-lawyer/AI assistance (5.3), and the 2024 to 2025 guidance on generative AI. Confirm your jurisdiction's rules; treat this as an engineering companion to that duty.
+This checklist is written to support (not replace) counsel's own analysis under the applicable rules: competence and technology (ABA Model Rule 1.1 cmt. 8), confidentiality (1.6), supervision of nonlawyer and AI assistance (5.3), and ABA Formal Opinion 512 (2024) on generative AI. Confirm your jurisdiction's rules; treat this as an engineering companion to that duty.
 
 ## Related work
 
-- **[intake-triage-mcp](https://github.com/granolacowboy/intake-triage-mcp):** a reference implementation of the determinism/provenance principles above for legal intake.
+- **[intake-triage-mcp](https://github.com/granolacowboy/intake-triage-mcp):** a reference implementation of the determinism and provenance principles above for legal intake.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
 
 ---
 
